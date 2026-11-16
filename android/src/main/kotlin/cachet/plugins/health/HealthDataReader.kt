@@ -642,24 +642,11 @@ class HealthDataReader(
 
             // Add final datapoint
             healthConnectData.add(
-                mapOf<String, Any?>(
-                    "uuid" to record.metadata.id,
-                    "workoutActivityType" to
-                            (HealthConstants.workoutTypeMap
-                                .filterValues { it == record.exerciseType }
-                                .keys
-                                .firstOrNull() ?: "OTHER"),
-                    "totalDistance" to if (totalDistance == 0.0) null else totalDistance,
-                    "totalDistanceUnit" to "METER",
-                    "totalEnergyBurned" to if (totalEnergyBurned == 0.0) null else totalEnergyBurned,
-                    "totalEnergyBurnedUnit" to "KILOCALORIE",
-                    "totalSteps" to if (totalSteps == 0.0) null else totalSteps,
-                    "totalStepsUnit" to "COUNT",
-                    "unit" to "MINUTES",
-                    "date_from" to record.startTime.toEpochMilli(),
-                    "date_to" to record.endTime.toEpochMilli(),
-                    "source_id" to "",
-                    "source_name" to record.metadata.dataOrigin.packageName,
+                workoutDataPoint(
+                    record = record,
+                    totalDistance = totalDistance,
+                    totalEnergyBurned = totalEnergyBurned,
+                    totalSteps = totalSteps,
                 ),
             )
         }
@@ -727,3 +714,31 @@ class HealthDataReader(
         private const val WORKOUT = "WORKOUT"
     }
 }
+
+internal fun workoutDataPoint(
+    record: ExerciseSessionRecord,
+    totalDistance: Double,
+    totalEnergyBurned: Double,
+    totalSteps: Double,
+): Map<String, Any?> =
+    mapOf(
+        "uuid" to record.metadata.id,
+        "workoutActivityType" to
+            (HealthConstants.workoutTypeMap
+                .filterValues { it == record.exerciseType }
+                .keys
+                .firstOrNull() ?: "OTHER"),
+        "totalDistance" to if (totalDistance == 0.0) null else totalDistance,
+        "totalDistanceUnit" to "METER",
+        "totalEnergyBurned" to
+            if (totalEnergyBurned == 0.0) null else totalEnergyBurned,
+        "totalEnergyBurnedUnit" to "KILOCALORIE",
+        "totalSteps" to if (totalSteps == 0.0) null else totalSteps,
+        "totalStepsUnit" to "COUNT",
+        "unit" to "MINUTES",
+        "date_from" to record.startTime.toEpochMilli(),
+        "date_to" to record.endTime.toEpochMilli(),
+        "recording_method" to record.metadata.recordingMethod,
+        "source_id" to "",
+        "source_name" to record.metadata.dataOrigin.packageName,
+    )

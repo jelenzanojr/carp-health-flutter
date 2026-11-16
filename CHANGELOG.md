@@ -1,3 +1,7 @@
+## 13.3.3
+
+* Android: Include the Health Connect recording method in workout data points.
+
 ## 13.3.2
 
 * Write data now returns UUID of records - PR [#448](https://github.com/carp-dk/carp-health-flutter/pull/448)

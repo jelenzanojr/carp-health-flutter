@@ -35,6 +35,16 @@ void main() {
       expect(value.totalDistance, 5000);
     });
 
+    test('parses a manually entered workout recording method', () {
+      final point = HealthDataPoint.fromHealthDataPoint(
+        HealthDataType.WORKOUT,
+        HealthFixtures.workoutPoint(recordingMethod: RecordingMethod.manual.toInt()),
+        HealthDataUnit.NO_UNIT.name,
+      );
+
+      expect(point.recordingMethod, RecordingMethod.manual);
+    });
+
     test('parses workout route health data points', () {
       final point = HealthDataPoint.fromHealthDataPoint(
         HealthDataType.WORKOUT_ROUTE,
